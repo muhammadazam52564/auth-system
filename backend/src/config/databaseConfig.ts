@@ -1,5 +1,6 @@
-const postgres = require('postgres');
+const { Pool } = require('pg');
 require('dotenv').config();
+
 const { 
   PGHOST, 
   PGDATABASE, 
@@ -9,20 +10,21 @@ const {
   DB_PORT 
 } = process.env;
 
-const db =  postgres({
+
+const pool = new Pool({
   host: PGHOST,
   database: PGDATABASE,
   username: PGUSER,
   password: PGPASSWORD,
   port: DB_PORT,
-  ssl: 'require',
-  connection: {
-    options: `project=${ENDPOINT_ID}`
-  }
-})
+  ssl: {
+    require: true,
+  },
+});
 
-module.exports = db
 
+
+module.exports = pool
 
 
 
