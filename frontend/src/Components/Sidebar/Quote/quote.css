@@ -1,0 +1,16 @@
+.quote { 
+    color: rgb(255, 255, 255);
+    flex-grow: 1;
+    b {
+        font-size: 3rem;
+    }
+    span {
+        font-size: 1.2rem;
+        color: rgb(255, 255, 255);
+    }
+    .quote-icon-style{
+        color: #ffffff;
+        margin: 1rem;
+    }
+}
+

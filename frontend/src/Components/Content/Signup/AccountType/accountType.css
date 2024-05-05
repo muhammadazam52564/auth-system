@@ -1,0 +1,21 @@
+.user-type-button{
+    margin: 10px 0;
+    background-color: #F5F9FF;
+}
+.user-type-button:hover {
+    border: 2px solid #1565D8;
+    .hover-display{
+        display: block;
+    }
+}
+.flex-align-center {
+    display: flex;
+    align-items: center;
+}
+.hover-display{
+    display: none;
+}
+.avatar-size{
+    width: 4rem;
+    height: 4rem;
+}

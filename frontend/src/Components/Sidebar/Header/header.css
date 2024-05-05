@@ -1,0 +1,12 @@
+.header-layout{
+    padding-top: 2rem;
+    padding-left: 3rem;
+    color: rgb(255, 255, 255);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: end;
+    .logo{
+        width: 3.0rem;
+        height: 2.0rem;
+    }
+}

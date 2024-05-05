@@ -1,0 +1,9 @@
+.signature{
+    margin: 0.7rem 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    .verify-sign{
+        color: rgb(54, 197, 29);
+    }
+}

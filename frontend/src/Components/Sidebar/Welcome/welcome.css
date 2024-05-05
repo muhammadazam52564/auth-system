@@ -1,0 +1,19 @@
+.welcome { 
+    color: rgb(255, 255, 255);
+    flex-grow: 1;
+    .text{
+        font-size: 3.8rem;
+        color: rgb(255, 255, 255);
+    }
+    
+    @media only screen  and (max-width: 1280px){
+        p {
+            font-size: 3.5rem;
+        }
+    }
+    @media only screen  and (max-width: 991px){
+        p {
+            font-size: 3.5rem;
+        }
+    }
+}

@@ -1,0 +1,29 @@
+.signup-cover {
+    height: 100%;
+    .signup-header{
+        padding: 2.5rem 3.2rem 1rem 1rem;
+    }
+    .form-header{
+        padding: 2.5rem 3.2rem 1rem 1rem;
+    }
+    .form-size{
+        max-width: 900px;
+        min-width: 320px;
+    }
+    .signup-content{
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .signup-footer{
+        padding: 1.5rem;
+        color: #383636;
+        .justify-logout-icon{
+            display: flex;
+            align-items: flex-end;
+        }
+    }
+}
+

@@ -1,0 +1,25 @@
+.login-cover {
+    height: 100%;
+    .login-header{
+        padding: 2.5rem 3.2rem 0 0;
+    }
+    .form-size{
+        max-width: 900px;
+        min-width: 320px;
+    }
+    .login-content{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .login-footer{
+        padding: 1.5rem;
+        color: #383636;
+        .justify-logout-icon{
+            display: flex;
+            align-items: flex-end;
+        }
+    }
+}
+

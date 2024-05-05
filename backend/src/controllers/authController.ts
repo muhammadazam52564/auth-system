@@ -13,16 +13,18 @@ const jwtSign = (user: Object)=>{
     return  jwt.sign(user, SECRET, OPTIONS)
 }
 
+
 const registerHandler = async (req: Request, res: Response)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).send({ errors: errors.array() });
+        return res.status(200).send({ errors: errors.array() });
     }
     try {
         const result = await pool.query("SELECT * FROM users WHERE email=$1", [req.body.email])
         console.log(result);
         if(result.rowCount){
-            res.status(400).send({
+            res.status(200).send({
+                success: false,
                 message: msg.EMAIL_TAKEN,
                 data: null
             })
@@ -33,7 +35,8 @@ const registerHandler = async (req: Request, res: Response)=>{
             pool.query(query, data, (err: any, result: any)=>{
                 if(err){
                     console.log(err);
-                    res.status(500).send({
+                    res.status(200).send({
+                        success: false,
                         message: msg.UNKNOWN_ERROR,
                         data: null
                     })
@@ -52,6 +55,7 @@ const registerHandler = async (req: Request, res: Response)=>{
                     }
                     const token = jwtSign(user)
                     res.status(201).send({
+                        success: true,
                         message: msg.USER_CREATED,
                         token: token,
                         data: user
@@ -67,13 +71,13 @@ const registerHandler = async (req: Request, res: Response)=>{
 const loginHandler = async (req: Request, res: Response)=>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).send({ errors: errors.array() });
+      return res.status(200).send({ errors: errors.array() });
     }
     try {
 
         const password = req.body.password
         const result = await pool.query("SELECT * FROM users WHERE email=$1", [req.body.email])
-        console.log(result);
+        // console.log(result);
         
         if(result.rowCount){
             const record = result.rows[0];
@@ -91,30 +95,38 @@ const loginHandler = async (req: Request, res: Response)=>{
                     profile_picture: record.profile_picture
                 }
                 const token = jwtSign(record)
-                console.log(`Successed`);
-                res.status(201).send({
+                res.status(200).send({
+                    success: true,
                     message: msg.LOGIN_SUCCESS,
                     token: token,
                     data: user
                 })
             }else {
-                res.status(400).send({
+                res.status(200).send({
+                    success: false,
                     message: msg.INVALID_CREDENTIALS,
                     data: null
                 })
             }
         }else{
-            res.status(400).send({
+            res.status(200).send({
+                success: false,
                 message: msg.INVALID_CREDENTIALS,
                 data: null
             })
         }
        
-    } cat
-    ch (error: any) {
-        console.log(error.message);
-        
+    } catch (error: any) {
+        res.status(200).send({
+            success: false,
+            message: error.message,
+            data: null
+        })
     }
 }
 
-module.exports = { registerHandler, loginHandler }
+const verifyToken = (req: Request, res: Response)=>{
+    // Just for Authantication Middleware handle All Authentication 
+}
+
+module.exports = { registerHandler, loginHandler, verifyToken }

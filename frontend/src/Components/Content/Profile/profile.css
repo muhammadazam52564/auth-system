@@ -1,0 +1,28 @@
+.profile-cover {
+    height: 100%;
+    .profile-header{
+        padding: 2.5rem 3.2rem 0 0;
+        color: rgb(88, 86, 84);
+        small {
+            text-align: right;
+        }
+        .avatar {
+            width: 50px;
+            height: 50px;
+            margin-left: 1rem;
+            border: 1px solid #f3eaea;
+        }
+    }
+    .profile-content{
+        flex-grow: 1;
+        .styleIcon{
+            color: rgb(174, 231, 94);
+            font-size: 4rem;
+        }
+
+    }
+    .profile-footer{
+        padding: 1.5rem;
+    }
+}
+
