@@ -15,8 +15,6 @@ type userType = {
 
  const jwtVerifyMiddleware = (req: Request, res: Response, next: NextFunction)=>{
     try {
-        console.log(req.headers);
-        
         if(!req.headers.authorization){
             res.status(200).send({
                 success: false,

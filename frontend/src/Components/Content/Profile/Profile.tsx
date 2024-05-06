@@ -16,20 +16,10 @@ const {
   Title
 } = Typography
 
-type propType = {
-  id: number,
-  user_type: number,
-  full_name: string,
-  email: string,
-  phone: string,
-  address: string,
-  country: string,
-  bvn: number,
-  profile_picture: string
-}
 
 
-const Profile = ({ profileData }: propType) => {
+
+const Profile = ({ profileData }: any) => {
   const navigate = useNavigate()
   const logout = ()=>{
     localStorage.removeItem('token')

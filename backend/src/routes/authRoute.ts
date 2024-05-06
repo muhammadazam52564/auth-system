@@ -8,11 +8,12 @@ const jwtVerifyMiddleware = require("../middlewares/jwtVerifyMiddleware")
 const { 
     registerHandler,
     loginHandler,
-    verifyToken
+    verifyToken,
+    googleAuth
 }  = require('../controllers/authController')
 
 authRoutes.post('/login', authValidator('login'), loginHandler)
 authRoutes.post('/register',authValidator('register'), registerHandler)
 authRoutes.get('/verify', jwtVerifyMiddleware, verifyToken)
-
+authRoutes.post('/googgle-auth', googleAuth)
 module.exports = authRoutes

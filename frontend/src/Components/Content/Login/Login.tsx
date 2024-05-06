@@ -4,6 +4,7 @@ import { FcGoogle } from "react-icons/fc"
 import { toast } from 'react-toastify'
 import { useNavigate } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
+import  { useAuth }  from "../../../hooks/useAuth"
 import {
   publicInstance as axios 
 } from "../../../Config/axios"
@@ -40,7 +41,6 @@ const Login = () => {
     setLoading(true)
     const response = await axios.post('/login', values)
     const data = response.data
-    console.log(data)
     setLoading(false)
     if (data.success) {
       localStorage.setItem('token', data.token)
@@ -52,6 +52,8 @@ const Login = () => {
     }
 
   }
+
+  const {googleLogin} = useAuth()
   
   return (
     <>
@@ -60,9 +62,9 @@ const Login = () => {
             <Text type="secondary">Not a member ? <Link to="/signup"> &nbsp;Sign Up</Link></Text>
         </Flex>
 
-        <Row>
+        <Row className="p-2">
           <Col 
-            className="p-2"
+            
             xs={{ span: 24, offset: 0 }}
             sm={{ span: 24, offset: 0 }}
             md={{ span: 16, offset: 3 }}
@@ -119,6 +121,9 @@ const Login = () => {
 
               <Form.Item>
                 <Button 
+                  onClick={()=>{
+                    googleLogin()
+                  }}
                   type="default" 
                   icon={<FcGoogle/>}
                   block

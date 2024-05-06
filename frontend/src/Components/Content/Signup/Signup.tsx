@@ -11,8 +11,12 @@ import business  from "../../../assets/individual.png"
 import individual  from "../../../assets/business.png"
 import { toast } from 'react-toastify'
 import { IoChevronBack } from "react-icons/io5";
+import  { useAuth }  from "../../../hooks/useAuth"
 import axios from "axios"
 import "./signup.css"
+
+
+
 
 import { 
   Button,
@@ -47,7 +51,7 @@ const Signup = () => {
     full_name: "",
     email: "",
     password: "",
-    code: "",
+    code: "+92",
     phone: "",
     address: "",
     country: "Pakistan",
@@ -86,7 +90,7 @@ const Signup = () => {
   )
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  const onValuesChangeFun = (changedFields)=>{
+  const onValuesChangeFun = (changedFields: any)=>{
     const fieldName = changedFields[0]?.name[0]
     const value = changedFields[0]?.value
     setFormState((prev)=>{
@@ -98,16 +102,14 @@ const Signup = () => {
   }
   const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
     console.log(values);
+    
     setLoading(true)
     if(!lastStep){
-      console.log(formState);
       setLoading(false)
       next()
     }else{
       const response = await axios.post('/register', formState)
       const data = response.data
-      console.log(response);
-      
       if (data.success) {
         localStorage.setItem('token', data.token)
         setLoading(false)
@@ -121,6 +123,10 @@ const Signup = () => {
     }
 
   }
+
+  const {googleLogin} = useAuth()
+  
+
   return (
     <Flex vertical className="signup-cover">
       
@@ -131,7 +137,7 @@ const Signup = () => {
               <Text type="secondary">Already have an account? <Link to="/login"> &nbsp; Sign In</Link></Text>
             </Flex>
           )
-          : 
+          :
           (
             <Flex justify="space-between" align="center" className="signup-header">
               <Button
@@ -146,7 +152,7 @@ const Signup = () => {
             </Flex>
           )
       }
-      <Row>
+      <Row className="p-2">
         <Col 
           xs={{ span: 24, offset: 0 }}
           sm={{ span: 16, offset: 4 }}
@@ -163,11 +169,12 @@ const Signup = () => {
            lg={{ span: 14, offset: 4 }}
         >
           <Form
+            initialValues={{ code: "+92", country: "Pakistan" }}
             name="signup"
             onFinish={onFinish}
             labelCol={{ span: 24 }}
             wrapperCol={{ span: 24 }}
-            initialValues={{ code: "+92", country: "Pakistan" }}
+            
             onFieldsChange={onValuesChangeFun}
             className="py-2"
           >
@@ -223,10 +230,14 @@ const Signup = () => {
                   <Divider> Or </Divider>
                   <Form.Item>
                     <Button 
+                      onClick={()=>{
+                        googleLogin()
+                      }}
                       type="default" 
                       icon={<FcGoogle/>}
                       block
                       size="large"
+                      
                     >
                       Signin with Google
                     </Button>

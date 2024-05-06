@@ -1,9 +1,15 @@
 import { Request, Response } from "express"
-import { validationResult } from "express-validator";
+require("dotenv").config()
+import { validationResult } from "express-validator"
 const jwt  = require("jsonwebtoken")
 const bcrypt = require('bcrypt')
 const pool = require('../config/databaseConfig')
 const msg  = require("../config/messages")
+
+
+const { OAuth2Client } = require('google-auth-library');
+
+
 
 const jwtSign = (user: Object)=>{
     const SECRET = process.env.SECRET
@@ -21,7 +27,6 @@ const registerHandler = async (req: Request, res: Response)=>{
     }
     try {
         const result = await pool.query("SELECT * FROM users WHERE email=$1", [req.body.email])
-        console.log(result);
         if(result.rowCount){
             res.status(200).send({
                 success: false,
@@ -34,10 +39,10 @@ const registerHandler = async (req: Request, res: Response)=>{
             const query =  "INSERT INTO users (user_type, full_name, email, password, phone, address, country, bvn) VALUES($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *"
             pool.query(query, data, (err: any, result: any)=>{
                 if(err){
-                    console.log(err);
                     res.status(200).send({
                         success: false,
                         message: msg.UNKNOWN_ERROR,
+                        error: err,
                         data: null
                     })
                 }else{
@@ -64,7 +69,12 @@ const registerHandler = async (req: Request, res: Response)=>{
             })
         }
     } catch (error: any) {
-        console.log(error.message);
+        res.status(200).send({
+            success: false,
+            message:"Something went wrong",
+            error: error,
+            data: null
+        })
     }
 }
 
@@ -76,9 +86,7 @@ const loginHandler = async (req: Request, res: Response)=>{
     try {
 
         const password = req.body.password
-        const result = await pool.query("SELECT * FROM users WHERE email=$1", [req.body.email])
-        // console.log(result);
-        
+        const result = await pool.query("SELECT * FROM users WHERE email=$1", [req.body.email])        
         if(result.rowCount){
             const record = result.rows[0];
             const passwordCheck = await bcrypt.compare(password, record.password);
@@ -119,14 +127,116 @@ const loginHandler = async (req: Request, res: Response)=>{
     } catch (error: any) {
         res.status(200).send({
             success: false,
-            message: error.message,
+            message:"Something went wrong",
+            error: error,
             data: null
         })
     }
 }
 
-const verifyToken = (req: Request, res: Response)=>{
+const verifyToken = async (req: Request, res: Response)=>{
     // Just for Authantication Middleware handle All Authentication 
 }
 
-module.exports = { registerHandler, loginHandler, verifyToken }
+const googleAuth = async (req: Request, res: Response)=>{
+   try {
+        // const client = new OAuth2Client(process.env.GOOGLE_ID);
+
+        // const ticket = await client.verifyIdToken({
+        //     idToken: req.body.token,
+        //     audience: process.env.GOOGLE_ID
+        // });
+        // const payloads = ticket.getPayload();
+
+        // console.log(payloads);
+        
+
+        const payload = {
+            email: "muhammadazam52564@gmail.com",
+            full_name: "mma",
+            user_type: 1,
+            phone: "123456",
+            password: "",
+            address: "lahore punjab pakistan",
+            country: "Albania",
+            profile_picture: "url",
+            bvn: "12345678909"
+        }
+
+        const result = await pool.query("SELECT * FROM users WHERE email=$1", [payload.email])
+        console.log(result);
+        if(result.rowCount){
+
+            const record = result.rows[0]
+            const user = {
+                id: record.id,
+                user_type: record.user_type,
+                full_name: record.full_name,
+                email: record.email,
+                phone: record.phone,
+                address: record.address,
+                country: record.country,
+                bvn: record.bvn,
+                profile_picture: record.profile_picture
+            }
+            const token = jwtSign(user)
+            res.status(201).send({
+                success: true,
+                message: msg.GOOGLE_SIGNIN,
+                token: token,
+                data: user
+            })
+        }else{
+            const data = [payload.user_type, payload.full_name, payload.email, payload.phone, payload.address, payload.country, payload.profile_picture, payload.password, payload.bvn]
+
+
+            const query =  "INSERT INTO users (user_type, full_name, email, phone, address, country, profile_picture, password, bvn) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *"
+
+            pool.query(query, data, (err: any, result: any)=>{
+                if(err){
+                    res.status(200).send({
+                        success: false,
+                        message: msg.UNKNOWN_ERROR,
+                        error: err,
+                        data: null
+                    })
+                }
+                else{
+                    const record = result.rows[0]
+                    const user = {
+                        id: record.id,
+                        user_type: record.user_type,
+                        full_name: record.full_name,
+                        email: record.email,
+                        phone: record.phone,
+                        address: record.address,
+                        country: record.country,
+                        bvn: record.bvn,
+                        profile_picture: record.profile_picture
+                    }
+                    const token = jwtSign(user)
+                    res.status(201).send({
+                        success: true,
+                        message: msg.USER_CREATED,
+                        token: token,
+                        data: user
+                    })
+                }
+            })
+        }
+
+   } 
+   catch (error) {
+        res.status(200).send({
+            success: false,
+            message:"Something went wrong",
+            error: error,
+            data: null
+        })
+   }
+
+
+}
+
+
+module.exports = { registerHandler, loginHandler, verifyToken, googleAuth }

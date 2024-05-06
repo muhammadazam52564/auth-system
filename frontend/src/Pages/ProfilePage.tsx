@@ -25,14 +25,13 @@ const ProfilePage = () => {
         }
       )
       const data = response.data
-      console.log(data);
       setLoading(false)
       if (data.success) {
         setProfileData(data.data)
       }else {
-        toast.error(`${data.message}`, {
-          position: "top-right",
-        })
+        // toast.error(`${data.message}`, {
+        //   position: "top-right",
+        // })
         navigate("/login")
       }
     } catch (error) {
@@ -44,7 +43,12 @@ const ProfilePage = () => {
     }
 
   }
-  useEffect(() =profileData
+  useEffect(() => {
+    getProfile()
+  }, [1])
+  
+
+
   return (
     !loading ? 
       !profileError ?  
